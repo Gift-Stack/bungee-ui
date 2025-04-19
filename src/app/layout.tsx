@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import ClientBody from "./ClientBody";
+import "@rainbow-me/rainbowkit/styles.css";
+
+import ClientBody from "../components/client-body";
 
 const inter = Inter({
   subsets: ["latin"],

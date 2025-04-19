@@ -1,5 +1,4 @@
-import Image from "next/image";
-import SwapInterface from "../components/SwapInterface";
+import SwapInterface from "../components/swap-interface";
 
 export default function Home() {
   return (
