@@ -3,14 +3,6 @@ import React from "react";
 import { useAccount } from "wagmi";
 
 const WalletConnector = () => {
-  const { address, chain, isConnected, connector } = useAccount();
-
-  console.log(
-    "connector?.name",
-    connector?.name,
-    connector?.id,
-    connector?.icon
-  );
   return (
     <ConnectButton.Custom>
       {({
@@ -21,10 +13,9 @@ const WalletConnector = () => {
         openChainModal,
         openAccountModal,
       }) => {
-        const ready = mounted;
-        const connected = ready && account && chain;
+        const connected = mounted && account && chain;
 
-        if (!ready) return null;
+        if (!mounted) return null;
         if (!connected) {
           return (
             <button
@@ -76,10 +67,11 @@ const WalletConnector = () => {
               type="button"
             >
               <span className="text-text-secondary">
-                {(account.displayBalance || 0).toLocaleString(undefined, {
+                {Number(account.balanceFormatted || 0).toLocaleString("en-US", {
                   minimumFractionDigits: 2,
-                  maximumFractionDigits: 4,
-                })}
+                  maximumFractionDigits: 6,
+                })}{" "}
+                ETH
               </span>
               <span>{account.displayName}</span>
             </button>

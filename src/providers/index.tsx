@@ -4,13 +4,26 @@ import React from "react";
 import { WagmiProvider } from "wagmi";
 
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
+
+import {
+  safeWallet,
+  rainbowWallet,
+  walletConnectWallet,
+} from "@rainbow-me/rainbowkit/wallets";
+
 import { arbitrum } from "viem/chains";
 
 const config = getDefaultConfig({
-  appName: "My RainbowKit App",
   projectId: "YOUR_PROJECT_ID",
+  appName: "Bungee Protocol",
   chains: [arbitrum],
-  ssr: true, // If your dApp uses server side rendering (SSR)
+  ssr: true,
+  wallets: [
+    {
+      groupName: "Recommended",
+      wallets: [safeWallet, rainbowWallet, walletConnectWallet],
+    },
+  ],
 });
 
 const queryClient = new QueryClient();
