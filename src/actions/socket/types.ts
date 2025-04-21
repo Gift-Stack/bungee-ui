@@ -1,5 +1,19 @@
+export type SocketResponse<T> = {
+  success: boolean;
+  result: T;
+};
+
+export type ApprovalData = {
+  minimumApprovalAmount: `${number}`;
+  approvalTokenAddress: string;
+  allowanceTarget: string;
+  owner: string;
+} | null; // null if token is native
+
+export type UserTxType = "dex-swap";
+
 export type UserTX = {
-  userTxType: "dex-swap";
+  userTxType: UserTxType;
   txType: `eth_${string}`;
   swapSlippage: number;
   chainId: number;
@@ -9,12 +23,7 @@ export type UserTX = {
     icon: string;
   };
   fromAsset: Asset;
-  approvalData: {
-    minimumApprovalAmount: `${number}`;
-    approvalTokenAddress: string;
-    allowanceTarget: string;
-    owner: string;
-  };
+  approvalData: ApprovalData;
   fromAmount: `${number}`;
   toAsset: Asset;
   toAmount: `${number}`;
@@ -65,7 +74,7 @@ export type AssetWithPrice = Asset & {
   priceInUsd: number;
 };
 
-export type QuoteResponse = {
+export type Quote = {
   routes: Route[];
   fromChainId: number;
   fromAsset: AssetWithPrice;

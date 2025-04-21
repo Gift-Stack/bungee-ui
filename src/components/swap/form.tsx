@@ -2,12 +2,13 @@
 
 import { useDebounce } from "@/hooks/debounce";
 import { useQuote } from "@/hooks/quote";
-import { Asset } from "@/hooks/quote/types";
+import { Asset } from "@/actions/socket/types";
 import React, { useMemo, useState } from "react";
 import AmountInput from "./amount-input";
 import { useAccount, useBalance } from "wagmi";
-import { useSwap } from "@/hooks/swap";
-import AppLogo from "../app-logo";
+import SwapReview from "./review";
+import { RotateCcw } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const arbitrumChainId = 42161;
 
@@ -34,8 +35,6 @@ const assetOut: Asset = {
 const SwapForm = () => {
   const account = useAccount();
 
-  const { mutate: swap, isPending: isSwapping } = useSwap();
-
   const { data: assetInBalance } = useBalance({
     address: account.address,
     chainId: arbitrumChainId,
@@ -49,15 +48,23 @@ const SwapForm = () => {
   });
 
   const [amount, setAmount] = useState<string>("");
+  const [swapReview, setSwapReview] = useState<boolean>(false);
 
   const debouncedAmount = useDebounce(amount, 300);
 
-  const { data: quote, isLoading } = useQuote({
+  const {
+    data: quote,
+    isLoading,
+    refetch: handleQuoteRefetch,
+    isRefetching: isRefetchingQuote,
+  } = useQuote({
     assetIn,
     assetOut,
     fromAmount: Number(debouncedAmount || 0),
     userAddress: account.address,
   });
+
+  console.log("quote", quote);
 
   const route = quote?.routes?.[0];
   const amountOut = Number(route?.toAmount || 0) / 10 ** assetOut.decimals;
@@ -74,17 +81,42 @@ const SwapForm = () => {
   }, [isLoading, amountOut, assetInBalance, debouncedAmount]);
 
   const handleSwap = () => {
-    if (!route || !debouncedAmount || isSwapping) return;
-    swap({
-      assetIn,
-      assetOut,
-      amount: Number(debouncedAmount || 0),
-      route,
-    });
+    if (!route || !debouncedAmount) return;
+    setSwapReview(true);
   };
+
+  if (swapReview && quote)
+    return (
+      <SwapReview
+        handleClose={() => setSwapReview(false)}
+        quote={quote}
+        assetIn={assetIn}
+        assetOut={assetOut}
+      />
+    );
 
   return (
     <>
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <p className="text-text-primary text-xl font-semibold">Swap</p>
+        <div className="flex items-center space-x-2">
+          {quote && (
+            <button
+              className="bg-transparent h-9 w-9 flex items-center justify-center border-none cursor-pointer text-text-primary"
+              type="button"
+              onClick={() => handleQuoteRefetch()}
+              disabled={isRefetchingQuote}
+            >
+              <RotateCcw
+                className={cn("size-5 text-bungee-gold ", {
+                  "animate-spin": isRefetchingQuote,
+                })}
+              />
+            </button>
+          )}
+        </div>
+      </div>
       <div className="bg-layer-2 mt-4 relative overflow-hidden rounded-lg">
         <div className="relative pt-[19px]">
           <div className="px-[18px] border-0 border-b border-solid border-border-dark pb-[35px]">
@@ -216,10 +248,10 @@ const SwapForm = () => {
             <div className="flex items-center w-full mt-2.5 h-5 justify-between">
               <div className="text-sm text-text-secondary">
                 {route
-                  ? `${route.receivedValueInUsd.toLocaleString("en-US", {
+                  ? route.receivedValueInUsd.toLocaleString("en-US", {
                       style: "currency",
                       currency: "USD",
-                    })}`
+                    })
                   : null}
               </div>
               <div className="text-sm text-text-secondary flex items-center ml-auto">
@@ -243,14 +275,10 @@ const SwapForm = () => {
       <button
         type="button"
         className="relative h-[50px] text-black text-base flex items-center justify-center border-none bg-bungee-gold disabled:bg-layer-2 disabled:text-text-secondary font-bold w-full text-center cursor-pointer mt-4 rounded-lg"
-        disabled={actionButtonHandler.disabled || isSwapping}
+        disabled={actionButtonHandler.disabled}
         onClick={handleSwap}
       >
-        {isSwapping ? (
-          <AppLogo animate={true} className="*:size-2.5" />
-        ) : (
-          actionButtonHandler.label
-        )}
+        {actionButtonHandler.label}
       </button>
     </>
   );
