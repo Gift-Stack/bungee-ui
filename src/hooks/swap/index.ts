@@ -9,6 +9,9 @@ import { useCapabilities, useSendCalls } from "wagmi/experimental";
 import { useSendTransaction, useWaitForTransactionReceipt } from "wagmi";
 import { estimateFeesPerGas, estimateGas } from "wagmi/actions";
 import { config } from "@/providers";
+import { toast } from "sonner";
+
+import { BaseError as ViemBaseError } from "viem";
 
 const swapMutatetionKey = "swap";
 
@@ -72,8 +75,8 @@ export const usePrepareSwap = (params: SwapParams) => {
 };
 
 export const useSwap = () => {
-  const { sendCalls, sendCallsAsync, data: batchedTxData } = useSendCalls();
-  const { data: hash, sendTransaction } = useSendTransaction();
+  const { sendCallsAsync } = useSendCalls();
+  const { sendTransactionAsync } = useSendTransaction();
 
   return useMutation({
     mutationFn: async (
@@ -84,8 +87,6 @@ export const useSwap = () => {
         >;
       }
     ) => {
-      console.log("params", params);
-
       if (!params.preparedSwapData.isCapableOfBatchingTx) {
       }
 
@@ -136,9 +137,14 @@ export const useSwap = () => {
           value: params.preparedSwapData.routeTxData.value,
         });
 
-        sendCallsAsync({
+        const result = await sendCallsAsync({
           calls: txsToExecute,
         });
+
+        return {
+          result,
+          batchedTx: true,
+        };
       } else {
         const feePerGas = await estimateFeesPerGas(config);
 
@@ -148,18 +154,49 @@ export const useSwap = () => {
           data: params.preparedSwapData.routeTxData.value,
         });
 
-        const tx = await sendTransaction({
+        const result = await sendTransactionAsync({
           to: params.preparedSwapData.routeTxData.txTarget,
           data: params.preparedSwapData.routeTxData.txData,
           value: BigInt(params.preparedSwapData.routeTxData.value),
           gasPrice: feePerGas.gasPrice,
           gas: gasEstimate,
         });
-      }
 
-      return;
+        return {
+          result,
+          batchedTx: false,
+        };
+      }
     },
     mutationKey: [swapMutatetionKey],
+    onError: (error) => {
+      let message: string;
+
+      if (error instanceof ViemBaseError) {
+        console.log("error", {
+          shortMessage: error.shortMessage,
+          details: error.details,
+          message: error.message,
+          cause: error.cause,
+          errorMessages: error.metaMessages,
+          errorName: error.name,
+        });
+        message = error.details;
+      } else {
+        message = error.message;
+      }
+
+      toast.error("Signature submission failed", {
+        description: message,
+      });
+    },
+    onSuccess: (data) => {
+      if (data.batchedTx) {
+        toast.success("Transaction submitted successfully");
+      } else {
+        toast.success("Transaction confirmed successfully");
+      }
+    },
   });
 };
 

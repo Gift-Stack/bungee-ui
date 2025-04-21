@@ -24,7 +24,7 @@ const SwapReview = ({
   const exchangeRate = amountOut / amountIn;
 
   const { address } = useAccount();
-  const { mutate: swap, isPending: isSwapping } = useSwap();
+  const { mutateAsync: swap, isPending: isSwapping } = useSwap();
 
   const {
     data: preparedSwapData,
@@ -104,14 +104,13 @@ const SwapReview = ({
 
     const isCapableOfBatchingTx = !!preparedSwapData.isCapableOfBatchingTx;
 
-    console.log("isApproved", isApproved, isCapableOfBatchingTx);
     if (!isApproved && !isCapableOfBatchingTx) {
       await handleApprove();
 
       return;
     }
 
-    swap({
+    const { result, batchedTx } = await swap({
       assetIn,
       assetOut,
       amount: amountIn,
@@ -119,6 +118,13 @@ const SwapReview = ({
       isApproved,
       preparedSwapData,
     });
+
+    console.log("result, batchedTx", result, batchedTx);
+    if (batchedTx) {
+      // Handle batched tx UX
+    } else {
+      // Handle non-batched tx UX
+    }
   };
 
   return (

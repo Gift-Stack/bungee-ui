@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
+import { Toaster } from "sonner";
 
 import ClientBody from "../components/client-body";
 
@@ -32,6 +33,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} font-sans`}>
         <ClientBody>{children}</ClientBody>
+        <Toaster position="top-right" theme="dark" closeButton richColors />
       </body>
     </html>
   );

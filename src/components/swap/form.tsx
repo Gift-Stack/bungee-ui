@@ -64,8 +64,6 @@ const SwapForm = () => {
     userAddress: account.address,
   });
 
-  console.log("quote", quote);
-
   const route = quote?.routes?.[0];
   const amountOut = Number(route?.toAmount || 0) / 10 ** assetOut.decimals;
 
