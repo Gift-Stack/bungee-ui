@@ -30,7 +30,7 @@ export const usePrepareSwap = (params: SwapParams) => {
   const isCapableOfBatchingTx =
     !!capabilitiesOnArbitrum?.atomicBatch?.supported;
 
-  return useQuery({
+  const { data: preparedSwapData, ...rest } = useQuery({
     queryKey: [swapMutatetionKey, "prepare"],
     queryFn: async () => {
       const routeTxData = await getRouteTransactionData(params.route);
@@ -54,12 +54,21 @@ export const usePrepareSwap = (params: SwapParams) => {
       }
 
       return {
-        isCapableOfBatchingTx,
         allowance,
         routeTxData,
       };
     },
   });
+
+  return {
+    data: preparedSwapData
+      ? {
+          ...preparedSwapData,
+          isCapableOfBatchingTx,
+        }
+      : undefined,
+    ...rest,
+  };
 };
 
 export const useSwap = () => {
