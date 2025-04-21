@@ -7,6 +7,7 @@ import React, { useMemo, useState } from "react";
 import AmountInput from "./amount-input";
 import { useAccount, useBalance } from "wagmi";
 import { useSwap } from "@/hooks/swap";
+import AppLogo from "../app-logo";
 
 const arbitrumChainId = 42161;
 
@@ -33,7 +34,7 @@ const assetOut: Asset = {
 const SwapForm = () => {
   const account = useAccount();
 
-  const { mutate: swap, isPending } = useSwap();
+  const { mutate: swap, isPending: isSwapping } = useSwap();
 
   const { data: assetInBalance } = useBalance({
     address: account.address,
@@ -64,10 +65,23 @@ const SwapForm = () => {
   const actionButtonHandler = useMemo(() => {
     if (isLoading) return { label: "Loading...", disabled: true };
     if (amountOut === 0) return { label: "No Quote Found", disabled: true };
-    if (Number(debouncedAmount) > Number(assetInBalance?.value || 0))
+    if (
+      Number(debouncedAmount) * 10 ** assetIn.decimals >
+      Number(assetInBalance?.value || 0)
+    )
       return { label: "Insufficient Balance", disabled: true };
     return { label: "Swap", disabled: false };
   }, [isLoading, amountOut, assetInBalance, debouncedAmount]);
+
+  const handleSwap = () => {
+    if (!route || !debouncedAmount || isSwapping) return;
+    swap({
+      assetIn,
+      assetOut,
+      amount: Number(debouncedAmount || 0),
+      route,
+    });
+  };
 
   return (
     <>
@@ -229,9 +243,14 @@ const SwapForm = () => {
       <button
         type="button"
         className="relative h-[50px] text-black text-base flex items-center justify-center border-none bg-bungee-gold disabled:bg-layer-2 disabled:text-text-secondary font-bold w-full text-center cursor-pointer mt-4 rounded-lg"
-        disabled={actionButtonHandler.disabled}
+        disabled={actionButtonHandler.disabled || isSwapping}
+        onClick={handleSwap}
       >
-        {actionButtonHandler.label}
+        {isSwapping ? (
+          <AppLogo animate={true} className="*:size-2.5" />
+        ) : (
+          actionButtonHandler.label
+        )}
       </button>
     </>
   );

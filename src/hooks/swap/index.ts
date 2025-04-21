@@ -24,6 +24,8 @@ export const useSwap = () => {
 
   return useMutation({
     mutationFn: async (params: SwapParams) => {
+      await new Promise((resolve) => setTimeout(resolve, 5_000));
+      console.log("params", params);
       return;
     },
     mutationKey: [swapMutatetionKey],
