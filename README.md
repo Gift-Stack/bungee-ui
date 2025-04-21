@@ -44,7 +44,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [x] Fetch quote
 - [ ] Implement a single-chain swap from USDC to ETH on Arbitrum via
       BungeeAPIs
-  - [ ] Detech if wallet is SAFE wallet (Batch approval & swap if so)
+  - [x] Detech if wallet is SAFE wallet (Batch approval & swap if so)
   - [ ] Else, handle the approval & swap flow sequentially
   - [ ] Show TX status
     - [ ] For SAFE wallet, show signature collection progress

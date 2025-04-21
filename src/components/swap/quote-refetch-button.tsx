@@ -28,6 +28,7 @@ const QuoteRefetchButton = () => {
       className="bg-transparent h-9 w-9 flex items-center justify-center border-none cursor-pointer text-text-primary"
       type="button"
       onClick={handleClick}
+      disabled={isFetching}
     >
       <RotateCcw
         className={cn("size-5 text-bungee-gold ", {

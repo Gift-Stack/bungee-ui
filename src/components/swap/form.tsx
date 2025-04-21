@@ -6,6 +6,7 @@ import { Asset } from "@/hooks/quote/types";
 import React, { useMemo, useState } from "react";
 import AmountInput from "./amount-input";
 import { useAccount, useBalance } from "wagmi";
+import { useSwap } from "@/hooks/swap";
 
 const arbitrumChainId = 42161;
 
@@ -31,6 +32,9 @@ const assetOut: Asset = {
 
 const SwapForm = () => {
   const account = useAccount();
+
+  const { mutate: swap, isPending } = useSwap();
+
   const { data: assetInBalance } = useBalance({
     address: account.address,
     chainId: arbitrumChainId,
@@ -40,6 +44,7 @@ const SwapForm = () => {
   const { data: assetOutBalance } = useBalance({
     address: account.address,
     chainId: arbitrumChainId,
+    // Token out not needed since it's native ETH
   });
 
   const [amount, setAmount] = useState<string>("");
