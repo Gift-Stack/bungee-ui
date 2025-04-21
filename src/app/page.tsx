@@ -1,4 +1,4 @@
-import SwapInterface from "../components/swap-interface";
+import SwapInterface from "../components/swap";
 
 export default function Home() {
   return (

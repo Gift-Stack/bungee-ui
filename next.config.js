@@ -1,7 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
-  distDir: 'out',
   images: {
     unoptimized: true,
     domains: [
@@ -29,6 +27,11 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "ugc.same-assets.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "media.socket.tech",
         pathname: "/**",
       },
     ],

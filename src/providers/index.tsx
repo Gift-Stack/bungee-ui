@@ -14,7 +14,7 @@ import {
 import { arbitrum } from "viem/chains";
 
 const config = getDefaultConfig({
-  projectId: "YOUR_PROJECT_ID",
+  projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
   appName: "Bungee Protocol",
   chains: [arbitrum],
   ssr: true,
