@@ -9,7 +9,7 @@ export function useQuote({
   assetIn,
   assetOut,
   fromAmount,
-  userAddress,
+  userAddress = "0x0000000000000000000000000000000000000000", // This is a fallback for the case where the user is not connected
   uniqueRoutesPerBridge = false,
   sort = "output",
   singleTxOnly = false,
@@ -17,7 +17,7 @@ export function useQuote({
   assetIn: Pick<Asset, "address" | "chainId" | "decimals">;
   assetOut: Pick<Asset, "address" | "chainId" | "decimals">;
   fromAmount: number;
-  userAddress: string;
+  userAddress?: string;
   uniqueRoutesPerBridge?: boolean;
   sort?: "output" | "gas" | "time";
   singleTxOnly?: boolean;

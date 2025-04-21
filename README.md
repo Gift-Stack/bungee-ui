@@ -34,3 +34,17 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+### TODO List
+
+- [x] Connect wallet (EOAs & SAFE wallet)
+- [x] Hardcode assetIn & assetOut with thier networks too
+- [x] Fetch balance of assetIn & assetOut
+- [x] Allow user to input amount to swap
+- [x] Fetch quote
+- [ ] Implement a single-chain swap from USDC to ETH on Arbitrum via
+      BungeeAPIs
+  - [ ] Detech if wallet is SAFE wallet (Batch approval & swap if so)
+  - [ ] Else, handle the approval & swap flow sequentially
+  - [ ] Show TX status
+    - [ ] For SAFE wallet, show signature collection progress

@@ -52,7 +52,7 @@ export type Route = {
 
 export type Asset = {
   chainId: number;
-  address: string;
+  address: `0x${string}`;
   symbol: string;
   name: string;
   decimals: number;

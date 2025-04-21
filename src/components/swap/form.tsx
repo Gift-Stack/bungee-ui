@@ -5,6 +5,9 @@ import { useQuote } from "@/hooks/quote";
 import { Asset } from "@/hooks/quote/types";
 import React, { useMemo, useState } from "react";
 import AmountInput from "./amount-input";
+import { useAccount, useBalance } from "wagmi";
+
+const arbitrumChainId = 42161;
 
 const assetIn: Asset = {
   address: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
@@ -13,7 +16,7 @@ const assetIn: Asset = {
   decimals: 6,
   logoURI: "https://media.socket.tech/tokens/all/USDC",
   icon: "https://media.socket.tech/tokens/all/USDC",
-  chainId: 42161,
+  chainId: arbitrumChainId,
 };
 
 const assetOut: Asset = {
@@ -23,10 +26,22 @@ const assetOut: Asset = {
   decimals: 18,
   logoURI: "https://media.socket.tech/tokens/all/ETH",
   icon: "https://media.socket.tech/tokens/all/ETH",
-  chainId: 42161,
+  chainId: arbitrumChainId,
 };
 
 const SwapForm = () => {
+  const account = useAccount();
+  const { data: assetInBalance } = useBalance({
+    address: account.address,
+    chainId: arbitrumChainId,
+    token: assetIn.address,
+  });
+
+  const { data: assetOutBalance } = useBalance({
+    address: account.address,
+    chainId: arbitrumChainId,
+  });
+
   const [amount, setAmount] = useState<string>("");
 
   const debouncedAmount = useDebounce(amount, 300);
@@ -35,18 +50,19 @@ const SwapForm = () => {
     assetIn,
     assetOut,
     fromAmount: Number(debouncedAmount || 0),
-    userAddress: "0x0000000000000000000000000000000000000000",
+    userAddress: account.address,
   });
 
   const route = quote?.routes?.[0];
   const amountOut = Number(route?.toAmount || 0) / 10 ** assetOut.decimals;
 
-  //   Include "Insufficient Balance" label
   const actionButtonHandler = useMemo(() => {
     if (isLoading) return { label: "Loading...", disabled: true };
     if (amountOut === 0) return { label: "No Quote Found", disabled: true };
+    if (Number(debouncedAmount) > Number(assetInBalance?.value || 0))
+      return { label: "Insufficient Balance", disabled: true };
     return { label: "Swap", disabled: false };
-  }, [isLoading, amountOut]);
+  }, [isLoading, amountOut, assetInBalance, debouncedAmount]);
 
   return (
     <>
@@ -85,14 +101,38 @@ const SwapForm = () => {
                 <span className="whitespace-nowrap"> {assetIn.symbol}</span>
               </button>
             </div>
-            <div className="flex items-center w-full mt-2.5 h-5 justify-end">
+            <div className="flex items-center w-full mt-2.5 h-5 justify-between">
+              <div className="text-sm text-text-secondary">
+                {route
+                  ? `${route.inputValueInUsd.toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                    })}`
+                  : null}
+              </div>
               <div className="text-sm text-text-secondary flex items-center ml-auto">
                 <p>
-                  Bal: <span className="text-text-primary">0</span>
+                  Bal:{" "}
+                  <span className="text-text-primary">
+                    {(
+                      Number(assetInBalance?.value || 0) /
+                      10 ** assetIn.decimals
+                    ).toLocaleString("en-US", {
+                      maximumFractionDigits: 5,
+                    })}
+                  </span>
                 </p>
                 <button
                   type="button"
                   className="bg-bungee-gold/10 border-none px-[5px] py-[3px] ml-1 cursor-pointer text-bungee-gold rounded-sm"
+                  onClick={() =>
+                    setAmount(
+                      (
+                        Number(assetInBalance?.value || 0) /
+                        10 ** assetIn.decimals
+                      ).toString()
+                    )
+                  }
                 >
                   MAX
                 </button>
@@ -155,8 +195,26 @@ const SwapForm = () => {
               </div>
             </div>
             <div className="flex items-center w-full mt-2.5 h-5 justify-between">
-              <div className="flex items-center space-x-1">
-                <span />
+              <div className="text-sm text-text-secondary">
+                {route
+                  ? `${route.receivedValueInUsd.toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                    })}`
+                  : null}
+              </div>
+              <div className="text-sm text-text-secondary flex items-center ml-auto">
+                <p>
+                  Bal:{" "}
+                  <span className="text-text-primary">
+                    {(
+                      Number(assetOutBalance?.value || 0) /
+                      10 ** assetOut.decimals
+                    ).toLocaleString("en-US", {
+                      maximumFractionDigits: 5,
+                    })}
+                  </span>
+                </p>
               </div>
             </div>
           </div>
