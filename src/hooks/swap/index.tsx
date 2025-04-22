@@ -40,7 +40,7 @@ export const usePrepareSwap = (params: SwapParams) => {
     !!capabilitiesOnArbitrum?.atomicBatch?.supported;
 
   const { data: preparedSwapData, ...rest } = useQuery({
-    queryKey: [swapMutationKey, "prepare"],
+    queryKey: [swapMutationKey, "prepare", { route: params.route }],
     queryFn: async () => {
       const routeTxData = await getRouteTransactionData(params.route);
 
