@@ -24,10 +24,10 @@ export default function ClientBody({ children }: ClientBodyProps) {
 
   return (
     <Providers>
-      <div className="flex flex-col">
+      <div className="flex flex-col min-h-screen">
         <AppHeader />
 
-        <main className="flex-1 flex items-center justify-center px-4 pt-[120px] min-h-screen">
+        <main className="flex-1 flex items-center justify-center px-4 pt-[120px]">
           {children}
         </main>
       </div>

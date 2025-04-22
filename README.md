@@ -141,6 +141,14 @@ src/
 - Debounced input for price quotes
 - Efficient state management with React Query
 - Minimal external dependencies
+- Optimized class handling during hydration to remove extension-added classes
+
+### Extension Class Handling
+
+- Implemented automatic cleanup of extension-added classes during hydration
+- Uses efficient `for...of` loop for class removal
+- Prevents potential conflicts with browser extensions that add classes to the document
+- Ensures clean DOM state for consistent styling
 
 ### Compatibility
 
