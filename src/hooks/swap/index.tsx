@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Asset, Route } from "@/actions/socket/types";
 import {
   getApprovalTransactionData,
@@ -12,6 +12,8 @@ import { config } from "@/providers";
 import { toast } from "sonner";
 
 import { BaseError as ViemBaseError } from "viem";
+import { shortenAddress } from "@/lib/utils";
+import { ExternalLink } from "lucide-react";
 
 const swapMutatetionKey = "swap";
 
@@ -151,10 +153,16 @@ export const useSwap = () => {
       } else {
         const feePerGas = await estimateFeesPerGas(config);
 
+        console.log("feePerGas", {
+          feePerGas,
+          preparedSwapDataTarget: params.preparedSwapData.routeTxData.txTarget,
+          preparedSwapDataValue: params.preparedSwapData.routeTxData.value,
+        });
+
         const gasEstimate = await estimateGas(config, {
           to: params.preparedSwapData.routeTxData.txTarget,
-          value: BigInt(0),
-          data: params.preparedSwapData.routeTxData.value,
+          value: BigInt(params.preparedSwapData.routeTxData.value),
+          data: params.preparedSwapData.routeTxData.txData,
         });
 
         const result = await sendTransactionAsync({
@@ -189,7 +197,19 @@ export const useSwap = () => {
       if (data.batchedTx) {
         toast.success("Transaction submitted successfully");
       } else {
-        toast.success("Transaction confirmed successfully");
+        toast.success("Transaction confirmed successfully", {
+          description: (
+            <a
+              href={`https://arbiscan.io/tx/${data.result}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 hover:underline"
+            >
+              {shortenAddress(data.result)}
+              <ExternalLink className="size-4" />
+            </a>
+          ),
+        });
       }
     },
   });
@@ -211,6 +231,8 @@ export const useApprove = () => {
       hash,
     });
 
+  const queryClient = useQueryClient();
+
   const mutationData = useMutation({
     mutationFn: async (params: ApproveParams) => {
       const approvalTransactionData = await getApprovalTransactionData(params);
@@ -229,6 +251,10 @@ export const useApprove = () => {
         data: approvalTransactionData.data,
         gasPrice: feePerGas.gasPrice,
         gas: gasEstimate,
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: [swapMutatetionKey, "prepare"],
       });
 
       return tx;

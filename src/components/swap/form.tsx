@@ -39,12 +39,20 @@ const SwapForm = () => {
     address: account.address,
     chainId: arbitrumChainId,
     token: assetIn.address,
+    query: {
+      refetchOnMount: "always",
+      refetchOnWindowFocus: true,
+    },
   });
 
   const { data: assetOutBalance } = useBalance({
     address: account.address,
     chainId: arbitrumChainId,
     // Token out not needed since it's native ETH
+    query: {
+      refetchOnMount: "always",
+      refetchOnWindowFocus: true,
+    },
   });
 
   const [amount, setAmount] = useState<string>("");
@@ -142,7 +150,7 @@ const SwapForm = () => {
                     <img
                       alt="Chain icon"
                       className="object-cover absolute top-0 left-0 size-2.5"
-                      src="https://ext.same-assets.com/1381159192/2578158177.svg"
+                      src="https://media.socket.tech/networks/arbitrum.svg"
                     />
                     <div className="absolute top-0 left-0 w-full h-full border border-solid border-black/10 rounded-full" />
                   </div>
@@ -234,7 +242,7 @@ const SwapForm = () => {
                       <img
                         alt="Chain icon"
                         className="object-cover absolute top-0 left-0 size-2.5"
-                        src="https://ext.same-assets.com/1381159192/2578158177.svg"
+                        src="https://media.socket.tech/networks/arbitrum.svg"
                       />
                       <div className="absolute top-0 left-0 w-full h-full border border-solid border-black/10 rounded-full" />
                     </div>

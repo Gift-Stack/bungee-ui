@@ -33,7 +33,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} font-sans`}>
         <ClientBody>{children}</ClientBody>
-        <Toaster position="top-right" theme="dark" closeButton richColors />
+        <Toaster position="bottom-right" theme="dark" closeButton richColors />
       </body>
     </html>
   );

@@ -32,16 +32,14 @@ const SwapReview = ({
   } = useSwap();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-  const {
-    data: preparedSwapData,
-    isLoading: isPreparingSwap,
-    refetch: refetchPreparedSwapData,
-  } = usePrepareSwap({
-    assetIn,
-    assetOut,
-    amount: amountIn,
-    route,
-  });
+  const { data: preparedSwapData, isLoading: isPreparingSwap } = usePrepareSwap(
+    {
+      assetIn,
+      assetOut,
+      amount: amountIn,
+      route,
+    }
+  );
 
   const { mutateAsync: approve, isPending: isApproving } = useApprove();
 
@@ -73,6 +71,20 @@ const SwapReview = ({
       return { label: "Preparing...", disabled: true };
     }
 
+    if (isApproving) {
+      return {
+        label: (
+          <div className="flex items-center justify-center gap-2">
+            <p className="text-sm text-text-secondary">
+              Approving {assetIn.symbol} on Arbitrum
+            </p>
+            <AppLogo animate={true} className="*:size-2.5" />
+          </div>
+        ),
+        disabled: true,
+      };
+    }
+
     if (preparedSwapData.isCapableOfBatchingTx) {
       return { label: "Complete Swap", disabled: false };
     }
@@ -82,7 +94,13 @@ const SwapReview = ({
     }
 
     return { label: "Complete Swap", disabled: false };
-  }, [assetIn.symbol, isApproved, isPreparingSwap, preparedSwapData]);
+  }, [
+    assetIn.symbol,
+    isApproved,
+    isPreparingSwap,
+    preparedSwapData,
+    isApproving,
+  ]);
 
   const handleApprove = async () => {
     if (!preparedSwapData || !preparedSwapData.routeTxData.approvalData) {
@@ -99,8 +117,6 @@ const SwapReview = ({
       tokenAddress: preparedSwapData.routeTxData.approvalData
         .approvalTokenAddress as `0x${string}`,
     });
-
-    refetchPreparedSwapData();
   };
 
   const handleSwap = async () => {
@@ -127,6 +143,8 @@ const SwapReview = ({
 
     if (batchedTx) {
       setIsSheetOpen(true);
+    } else {
+      handleClose();
     }
   };
 

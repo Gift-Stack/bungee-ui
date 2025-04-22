@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { isAddress } from "viem";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -25,7 +26,7 @@ export function shortenAddress(address: string, chars = 4): string {
   if (!address) return "";
 
   // Check if it's a valid Ethereum address
-  const isValidAddress = /^0x[a-fA-F0-9]{40}$/.test(address);
+  const isValidAddress = isAddress(address);
   if (!isValidAddress) return address;
 
   // Return first and last `chars` characters
