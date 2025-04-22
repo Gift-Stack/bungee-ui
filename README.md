@@ -163,4 +163,4 @@ src/
 - Safe wallet operations require multiple signatures based on wallet configuration
 
 ## Video Walkthrough
-https://www.loom.com/share/821491e1c1e2479ba1b6e078dd6f0bce?sid=0656b3d4-560e-418c-be23-dbb663ea4f50
+https://www.loom.com/share/abb28b271c3a4b258f4f14fde50bb15e?sid=e6345d25-e44b-4588-aa50-e1bcb38468da
