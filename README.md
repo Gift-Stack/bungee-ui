@@ -161,3 +161,6 @@ src/
 - Only supports USDC to ETH swaps on Arbitrum
 - Requires manual approval for first-time token usage with EOA wallets
 - Safe wallet operations require multiple signatures based on wallet configuration
+
+## Video Walkthrough
+https://www.loom.com/share/821491e1c1e2479ba1b6e078dd6f0bce?sid=0656b3d4-560e-418c-be23-dbb663ea4f50
