@@ -184,7 +184,7 @@ export const useSwap = () => {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 hover:underline"
             >
-              {shortenAddress(data.result)}
+              {shortenAddress(data.result, 6)}
               <ExternalLink className="size-4" />
             </a>
           ),

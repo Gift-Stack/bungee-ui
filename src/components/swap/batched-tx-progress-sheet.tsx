@@ -2,7 +2,7 @@ import React from "react";
 import Sheet from "../ui/sheet";
 import { useCallsStatus } from "wagmi/experimental";
 import { CheckCircle2, Clock, XCircle, Copy, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, shortenAddress } from "@/lib/utils";
 import { toast } from "sonner";
 
 const BatchedTxProgressSheet = ({
@@ -122,12 +122,15 @@ const BatchedTxProgressSheet = ({
                   </div>
 
                   <div className="text-sm space-y-1">
-                    <div className="flex justify-between items-center">
-                      <span className="text-text-secondary">Hash:</span>
+                    <a
+                      href={`https://arbiscan.io/tx/${receipt.transactionHash}`}
+                      target="_blank"
+                      className="flex justify-between items-center"
+                    >
+                      <span className="text-text-secondary">Receipt:</span>
                       <div className="flex items-center space-x-2">
                         <span className="text-text-primary font-mono">
-                          {receipt.transactionHash.slice(0, 8)}...
-                          {receipt.transactionHash.slice(-6)}
+                          {shortenAddress(receipt.transactionHash, 6)}
                         </span>
                         <button
                           onClick={() =>
@@ -142,8 +145,12 @@ const BatchedTxProgressSheet = ({
                           <Copy className="size-4 text-text-secondary hover:text-text-primary" />
                         </button>
                       </div>
-                    </div>
-                    <div className="flex justify-between items-center">
+                    </a>
+                    <a
+                      href={`https://arbiscan.io/block/${receipt.blockNumber}`}
+                      target="_blank"
+                      className="flex justify-between items-center"
+                    >
                       <span className="text-text-secondary">Block:</span>
                       <div className="flex items-center space-x-2">
                         <span className="text-text-primary">
@@ -165,7 +172,7 @@ const BatchedTxProgressSheet = ({
                           <Copy className="size-4 text-text-secondary hover:text-text-primary" />
                         </button>
                       </div>
-                    </div>
+                    </a>
                   </div>
                 </div>
               ))}

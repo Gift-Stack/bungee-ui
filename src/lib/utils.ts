@@ -25,10 +25,6 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
 export function shortenAddress(address: string, chars = 4): string {
   if (!address) return "";
 
-  // Check if it's a valid Ethereum address
-  const isValidAddress = isAddress(address);
-  if (!isValidAddress) return address;
-
   // Return first and last `chars` characters
   return `${address.substring(0, chars + 2)}...${address.substring(
     address.length - chars
