@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 interface AmountInputProps {
-  value: number;
+  value: number | string;
   isLoading?: boolean;
   readOnly?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -17,7 +17,7 @@ const AmountInput = ({
 
   const formattedValue = isFocused
     ? value.toString()
-    : value.toLocaleString("en-US", {
+    : Number(value).toLocaleString("en-US", {
         maximumFractionDigits: 6,
       });
 
@@ -40,7 +40,12 @@ const AmountInput = ({
       readOnly={readOnly}
       onFocus={() => setIsFocused(true)}
       onBlur={() => setIsFocused(false)}
-      onChange={onChange}
+      onChange={(e) => {
+        const value = e.target.value;
+        if (value === "" || /^[0-9]*[.]?[0-9]*$/.test(value)) {
+          onChange?.(e);
+        }
+      }}
     />
   );
 };

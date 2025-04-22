@@ -121,7 +121,7 @@ const SwapForm = () => {
             <div className="flex items-center justify-between w-full">
               <div className="w-full">
                 <AmountInput
-                  value={Number(amount)}
+                  value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                 />
               </div>
