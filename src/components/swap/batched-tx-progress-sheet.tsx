@@ -1,7 +1,7 @@
 import React from "react";
 import Sheet from "../ui/sheet";
 import { useCallsStatus } from "wagmi/experimental";
-import { CheckCircle2, Clock, XCircle, Copy } from "lucide-react";
+import { CheckCircle2, Clock, XCircle, Copy, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -78,9 +78,9 @@ const BatchedTxProgressSheet = ({
         {/* Signature Progress (for Safe wallets) */}
         {callsStatus?.status === "pending" && (
           <div className="space-y-2">
-            <div className="flex justify-between text-sm">
+            <div className="flex justify-between text-sm gap-2">
               <span className="text-text-secondary">Signature Progress</span>
-              <span className="text-text-primary">0/2</span>
+              <Loader2 className="size-4 text-text-primary animate-spin" />
             </div>
             <div className="h-2 bg-layer-3 rounded-full overflow-hidden">
               <div

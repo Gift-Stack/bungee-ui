@@ -81,8 +81,9 @@ const SwapForm = () => {
     if (
       Number(debouncedAmount) * 10 ** assetIn.decimals >
       Number(assetInBalance?.value || 0)
-    )
+    ) {
       return { label: "Insufficient Balance", disabled: true };
+    }
     return { label: "Swap", disabled: false };
   }, [isLoading, amountOut, assetInBalance, debouncedAmount]);
 
