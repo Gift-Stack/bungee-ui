@@ -1,10 +1,11 @@
 import { Asset, Quote } from "@/actions/socket/types";
 import { ChevronsRight, X } from "lucide-react";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { cn, shortenAddress } from "@/lib/utils";
 import { useSwap, usePrepareSwap, useApprove } from "@/hooks/swap";
 import AppLogo from "../app-logo";
 import { useAccount } from "wagmi";
+import BatchedTxProgressSheet from "./batched-tx-progress-sheet";
 
 const SwapReview = ({
   handleClose,
@@ -24,7 +25,12 @@ const SwapReview = ({
   const exchangeRate = amountOut / amountIn;
 
   const { address } = useAccount();
-  const { mutateAsync: swap, isPending: isSwapping } = useSwap();
+  const {
+    mutateAsync: swap,
+    isPending: isSwapping,
+    data: swapData,
+  } = useSwap();
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const {
     data: preparedSwapData,
@@ -119,16 +125,20 @@ const SwapReview = ({
       preparedSwapData,
     });
 
-    console.log("result, batchedTx", result, batchedTx);
     if (batchedTx) {
-      // Handle batched tx UX
-    } else {
-      // Handle non-batched tx UX
+      setIsSheetOpen(true);
     }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      {swapData?.result && (
+        <BatchedTxProgressSheet
+          isOpen={isSheetOpen}
+          onClose={() => setIsSheetOpen(false)}
+          id={swapData.result}
+        />
+      )}
       {/* Header */}
       <div className="flex justify-between items-center">
         <div />
@@ -235,20 +245,8 @@ const SwapReview = ({
         <div className="flex justify-between items-center">
           <span className="text-text-secondary">Slippage:</span>
           <span className="text-text-primary">
-            1% - <span className="text-text-secondary">Suggested</span>
+            0.3% - <span className="text-text-secondary">Suggested</span>
           </span>
-        </div>
-
-        <div className="flex justify-between items-center">
-          <span className="text-text-secondary">Est. Swap Time:</span>
-          <div className="flex items-center">
-            <img
-              src="https://ext.same-assets.com/1381159192/2563901416.svg"
-              alt="Bungee"
-              className="w-4 h-4 mr-1"
-            />
-            <span className="text-text-primary">Bungee ~ 30 sec</span>
-          </div>
         </div>
 
         <div className="flex justify-between items-center">

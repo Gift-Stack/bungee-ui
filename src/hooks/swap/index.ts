@@ -75,6 +75,7 @@ export const usePrepareSwap = (params: SwapParams) => {
 };
 
 export const useSwap = () => {
+  const { data: capabilities } = useCapabilities();
   const { sendCallsAsync } = useSendCalls();
   const { sendTransactionAsync } = useSendTransaction();
 
@@ -139,10 +140,12 @@ export const useSwap = () => {
 
         const result = await sendCallsAsync({
           calls: txsToExecute,
+          capabilities,
+          forceAtomic: true,
         });
 
         return {
-          result,
+          result: result.id,
           batchedTx: true,
         };
       } else {
@@ -173,14 +176,6 @@ export const useSwap = () => {
       let message: string;
 
       if (error instanceof ViemBaseError) {
-        console.log("error", {
-          shortMessage: error.shortMessage,
-          details: error.details,
-          message: error.message,
-          cause: error.cause,
-          errorMessages: error.metaMessages,
-          errorName: error.name,
-        });
         message = error.details;
       } else {
         message = error.message;
