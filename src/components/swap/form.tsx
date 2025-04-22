@@ -84,7 +84,7 @@ const SwapForm = () => {
     ) {
       return { label: "Insufficient Balance", disabled: true };
     }
-    return { label: "Swap", disabled: false };
+    return { label: "Proceed", disabled: false };
   }, [isLoading, amountOut, assetInBalance, debouncedAmount]);
 
   const handleSwap = () => {

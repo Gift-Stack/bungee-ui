@@ -7,7 +7,11 @@ import {
 } from "@/actions/socket";
 import { useCapabilities, useSendCalls } from "wagmi/experimental";
 import { useSendTransaction, useWaitForTransactionReceipt } from "wagmi";
-import { estimateFeesPerGas, estimateGas } from "wagmi/actions";
+import {
+  estimateFeesPerGas,
+  estimateGas,
+  waitForTransactionReceipt,
+} from "wagmi/actions";
 import { config } from "@/providers";
 import { toast } from "sonner";
 
@@ -15,7 +19,7 @@ import { BaseError as ViemBaseError } from "viem";
 import { shortenAddress } from "@/lib/utils";
 import { ExternalLink } from "lucide-react";
 
-const swapMutatetionKey = "swap";
+const swapMutationKey = "swap";
 
 const arbitrumChainId = 42161;
 
@@ -36,7 +40,7 @@ export const usePrepareSwap = (params: SwapParams) => {
     !!capabilitiesOnArbitrum?.atomicBatch?.supported;
 
   const { data: preparedSwapData, ...rest } = useQuery({
-    queryKey: [swapMutatetionKey, "prepare"],
+    queryKey: [swapMutationKey, "prepare"],
     queryFn: async () => {
       const routeTxData = await getRouteTransactionData(params.route);
 
@@ -152,13 +156,17 @@ export const useSwap = () => {
           gas: gasEstimate,
         });
 
+        await waitForTransactionReceipt(config, {
+          hash: result,
+        });
+
         return {
           result,
           batchedTx: false,
         };
       }
     },
-    mutationKey: [swapMutatetionKey],
+    mutationKey: [swapMutationKey],
     onError: (error) => {
       let message: string;
 
@@ -203,7 +211,7 @@ type ApproveParams = {
 };
 
 export const useApprove = () => {
-  const { data: hash, sendTransactionAsync, ...rest } = useSendTransaction();
+  const { data: hash, sendTransactionAsync, isPending } = useSendTransaction();
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt({
@@ -212,7 +220,7 @@ export const useApprove = () => {
 
   const queryClient = useQueryClient();
 
-  const mutationData = useMutation({
+  const { isPending: isMutatationPending, ...mutationData } = useMutation({
     mutationFn: async (params: ApproveParams) => {
       const approvalTransactionData = await getApprovalTransactionData(params);
 
@@ -233,12 +241,17 @@ export const useApprove = () => {
       });
 
       await queryClient.invalidateQueries({
-        queryKey: [swapMutatetionKey, "prepare"],
+        queryKey: [swapMutationKey, "prepare"],
       });
 
       return tx;
     },
   });
 
-  return { ...mutationData, ...rest, isConfirming, isConfirmed };
+  return {
+    ...mutationData,
+    isConfirming,
+    isConfirmed,
+    isPending: isMutatationPending || isPending || isConfirming,
+  };
 };
