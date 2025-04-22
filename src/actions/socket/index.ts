@@ -80,7 +80,7 @@ export async function getRouteTransactionData(route: Route) {
   });
 
   const json = (await response.json()) as SocketResponse<{
-    approvalData: ApprovalData;
+    approvalData: ApprovalData | null;
     chainId: number;
     txData: `0x${string}`;
     txTarget: `0x${string}`;

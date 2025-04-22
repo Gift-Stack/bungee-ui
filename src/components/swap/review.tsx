@@ -1,4 +1,4 @@
-import { Asset, Quote } from "@/actions/socket/types";
+import { Asset, Quote, Route } from "@/actions/socket/types";
 import { ChevronsRight, X } from "lucide-react";
 import React, { useMemo, useState } from "react";
 import { cn, shortenAddress } from "@/lib/utils";
@@ -9,16 +9,15 @@ import BatchedTxProgressSheet from "./batched-tx-progress-sheet";
 
 const SwapReview = ({
   handleClose,
-  quote,
+  route,
   assetIn,
   assetOut,
 }: {
   handleClose: () => void;
-  quote: Quote;
+  route: Route;
   assetIn: Asset;
   assetOut: Asset;
 }) => {
-  const route = quote.routes[0];
   const amountIn = Number(route?.fromAmount || 0) / 10 ** assetIn.decimals;
   const amountOut = Number(route?.toAmount || 0) / 10 ** assetOut.decimals;
 

@@ -91,11 +91,11 @@ const SwapForm = () => {
     setSwapReview(true);
   };
 
-  if (swapReview && quote)
+  if (swapReview && route)
     return (
       <SwapReview
         handleClose={() => setSwapReview(false)}
-        quote={quote}
+        route={route}
         assetIn={assetIn}
         assetOut={assetOut}
       />

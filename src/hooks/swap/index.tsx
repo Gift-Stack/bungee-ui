@@ -90,26 +90,11 @@ export const useSwap = () => {
         >;
       }
     ) => {
-      if (!params.preparedSwapData.isCapableOfBatchingTx) {
-      }
-
-      /**
-       * STEPS IF NOT BATCHING COMPATIBLE:
-       * - Check if approval is required for the token
-       * - If it is, get the approval transaction data
-       * - If it is not, proceed with the swap
-       */
-
-      /**
-       * STEPS IF BATCHING COMPATIBLE:
-       * - Check if approval is required for the token
-       * - If it is, add to an array of transactions to be executed
-       * - Add the swap transaction to the array
-       * - Execute the transactions
-       * - Return the transaction hash
-       */
-
-      const txsToExecute = [];
+      const txsToExecute: {
+        to: `0x${string}`;
+        data?: `0x${string}`;
+        value?: bigint | `0x${string}`;
+      }[] = [];
 
       if (!params.isApproved) {
         // Add to batch
@@ -152,12 +137,6 @@ export const useSwap = () => {
         };
       } else {
         const feePerGas = await estimateFeesPerGas(config);
-
-        console.log("feePerGas", {
-          feePerGas,
-          preparedSwapDataTarget: params.preparedSwapData.routeTxData.txTarget,
-          preparedSwapDataValue: params.preparedSwapData.routeTxData.value,
-        });
 
         const gasEstimate = await estimateGas(config, {
           to: params.preparedSwapData.routeTxData.txTarget,

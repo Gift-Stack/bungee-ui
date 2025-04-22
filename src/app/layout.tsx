@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
 import { Toaster } from "sonner";
-
+import { validateEnv } from "@/lib/env";
 import ClientBody from "../components/client-body";
 
 const inter = Inter({
@@ -11,6 +11,10 @@ const inter = Inter({
   display: "swap",
   variable: "--font-inter",
 });
+
+// Call validateEnv during module initialization
+// This will run on the server side during build and startup
+validateEnv();
 
 export const metadata: Metadata = {
   title: "Bungee Protocol - Swap tokens across chains",

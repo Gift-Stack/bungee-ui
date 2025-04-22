@@ -8,7 +8,7 @@ export type ApprovalData = {
   approvalTokenAddress: string;
   allowanceTarget: string;
   owner: string;
-} | null; // null if token is native
+};
 
 export type UserTxType = "dex-swap";
 
@@ -23,7 +23,7 @@ export type UserTX = {
     icon: string;
   };
   fromAsset: Asset;
-  approvalData: ApprovalData;
+  approvalData: ApprovalData | null; // null if token is native
   fromAmount: `${number}`;
   toAsset: Asset;
   toAmount: `${number}`;
