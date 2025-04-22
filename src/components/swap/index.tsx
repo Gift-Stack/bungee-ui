@@ -3,7 +3,7 @@ import SwapForm from "./form";
 
 export default function SwapInterface() {
   return (
-    <div className="relative w-[420px]">
+    <div className="relative md:w-[420px]">
       <div className="bg-layer-1 p-4 min-w-[360px] relative overflow-hidden border border-solid border-border-dark w-full rounded-2xl">
         <SwapForm />
       </div>

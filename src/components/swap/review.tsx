@@ -140,7 +140,7 @@ const SwapReview = ({
         />
       )}
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center  animate-in slide-in-from-bottom-20 duration-500">
         <div />
         <p className="text-text-primary text-xl font-semibold">Review</p>
         <button
@@ -153,7 +153,7 @@ const SwapReview = ({
       </div>
 
       {/* Token Display */}
-      <div className="flex items-center justify-center space-x-4 border border-border-dark bg-layer-2 w-max mx-auto p-2 rounded-full">
+      <div className="flex items-center justify-center space-x-4 border border-border-dark bg-layer-2 w-max mx-auto p-2 rounded-full  animate-in slide-in-from-bottom-20 duration-500">
         <div className="relative w-8 h-8">
           <img
             src={assetIn.logoURI}
@@ -172,7 +172,7 @@ const SwapReview = ({
       </div>
 
       {/* Swap Details */}
-      <div className="text-center">
+      <div className="text-center  animate-in slide-in-from-bottom-20 duration-500">
         <p className="text-text-secondary mb-1.5 text-sm">You're Swapping</p>
         <p className="text-text-primary text-base font-mono">
           <span className="text-text-secondary">
@@ -187,7 +187,7 @@ const SwapReview = ({
       </div>
 
       {/* Transaction Details */}
-      <div className="space-y-4 border border-dashed border-border-dark rounded-lg p-4 text-sm">
+      <div className="space-y-4 border border-dashed border-border-dark rounded-lg p-4 text-sm animate-in zoom-in-50 duration-500">
         <div className="flex justify-between items-center">
           <span className="text-text-secondary">Gas Fee:</span>
           <div className="flex items-center">
@@ -260,7 +260,7 @@ const SwapReview = ({
       {/* Approve Button */}
       <button
         type="button"
-        className="w-full h-12 flex items-center justify-center  bg-bungee-gold text-black disabled:bg-layer-2 disabled:text-text-secondary font-semibold rounded-lg border-none cursor-pointer"
+        className="w-full h-12 flex items-center justify-center  bg-bungee-gold text-black disabled:bg-layer-2 disabled:text-text-secondary font-semibold rounded-lg border-none cursor-pointer  animate-in slide-in-from-bottom-20 duration-500"
         disabled={actionButtonHandler.disabled || isPreparingSwap || isSwapping}
         onClick={handleSwap}
       >

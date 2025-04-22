@@ -115,7 +115,7 @@ const SwapForm = () => {
           )}
         </div>
       </div>
-      <div className="bg-layer-2 mt-4 relative overflow-hidden rounded-lg">
+      <div className="bg-layer-2 mt-4 relative overflow-hidden rounded-lg animate-in zoom-in-50 duration-500">
         <div className="relative pt-[19px]">
           <div className="px-[18px] border-0 border-b border-solid border-border-dark pb-[35px]">
             <div className="flex items-center justify-between w-full">
@@ -272,7 +272,7 @@ const SwapForm = () => {
 
       <button
         type="button"
-        className="relative h-[50px] text-black text-base flex items-center justify-center border-none bg-bungee-gold disabled:bg-layer-2 disabled:text-text-secondary font-bold w-full text-center cursor-pointer mt-4 rounded-lg"
+        className="relative h-[50px] text-black text-base flex items-center justify-center border-none bg-bungee-gold disabled:bg-layer-2 disabled:text-text-secondary font-bold w-full text-center cursor-pointer mt-4 rounded-lg animate-in slide-in-from-bottom-20 duration-500"
         disabled={actionButtonHandler.disabled}
         onClick={handleSwap}
       >
