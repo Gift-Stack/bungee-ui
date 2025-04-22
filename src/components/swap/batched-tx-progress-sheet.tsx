@@ -125,7 +125,7 @@ const BatchedTxProgressSheet = ({
                     <a
                       href={`https://arbiscan.io/tx/${receipt.transactionHash}`}
                       target="_blank"
-                      className="flex justify-between items-center"
+                      className="flex justify-between items-center hover:underline"
                     >
                       <span className="text-text-secondary">Receipt:</span>
                       <div className="flex items-center space-x-2">
@@ -149,7 +149,7 @@ const BatchedTxProgressSheet = ({
                     <a
                       href={`https://arbiscan.io/block/${receipt.blockNumber}`}
                       target="_blank"
-                      className="flex justify-between items-center"
+                      className="flex justify-between items-center hover:underline"
                     >
                       <span className="text-text-secondary">Block:</span>
                       <div className="flex items-center space-x-2">
