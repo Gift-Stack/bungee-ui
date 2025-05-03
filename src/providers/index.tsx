@@ -26,7 +26,7 @@ export const config = getDefaultConfig({
   wallets: [
     {
       groupName: "Recommended",
-      wallets: [safeWallet, rainbowWallet, walletConnectWallet],
+      wallets: [safeWallet, walletConnectWallet],
     },
   ],
 });
